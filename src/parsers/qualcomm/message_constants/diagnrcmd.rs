@@ -1,0 +1,22 @@
+// Management Layer 1
+const LOG_5GNR_ML1_MEAS_DATABASE_UPDATE: u16 = 0x97F; // 0xB97F NR ML1 Measurement Database Update
+
+// MAC
+const LOG_5GNR_MAC_RACH_ATTEMPT: u16 = 0x88A; // 0xB88A NR MAC RACH Attempt
+
+// RRC
+const LOG_5GNR_RRC_OTA_MESSAGE: u16 = 0x821; // 0xB821 NR RRC OTA
+const LOG_5GNR_RRC_MIB_INFO: u16 = 0x822; // 0xB822 NR RRC MIB Info
+const LOG_5GNR_RRC_SERVING_CELL_INFO: u16 = 0x823; // 0xB823 NR RRC Serving Cell Info
+const LOG_5GNR_RRC_CONFIGURATION_INFO: u16 = 0x825; // 0xB825 NR RRC Configuration Info
+const LOG_5GNR_RRC_SUPPORTED_CA_COMBOS: u16 = 0x826; // 0xB826 NR RRC Supported CA Combinations
+
+// NAS
+const LOG_5GNR_NAS_5GSM_PLAIN_OTA_INCOMING_MESSAGE: u16 = 0x800; // NR NAS 5GSM Plain OTA Incoming Message
+const LOG_5GNR_NAS_5GSM_PLAIN_OTA_OUTGOING_MESSAGE: u16 = 0x801; // NR NAS 5GSM Plain OTA Outgoing Message
+const LOG_5GNR_NAS_5GSM_SEC_OTA_INCOMING_MESSAGE: u16 = 0x808; // NR NAS 5GMM Security Protected OTA Incoming Message
+const LOG_5GNR_NAS_5GSM_SEC_OTA_OUTGOING_MESSAGE: u16 = 0x809; // NR NAS 5GMM Security Protected OTA Outgoing Message
+const LOG_5GNR_NAS_5GMM_PLAIN_OTA_INCOMING_MESSAGE: u16 = 0x80A; // NR NAS 5GMM Plain OTA Incoming Message
+const LOG_5GNR_NAS_5GMM_PLAIN_OTA_OUTGOING_MESSAGE: u16 = 0x80B; // NR NAS 5GMM Plain OTA Outgoing Message
+const LOG_5GNR_NAS_5GMM_PLAIN_OTA_CONTAINER_MESSAGE: u16 = 0x814; // NR NAS 5GMM Plain OTA Container Message
+const LOG_5GNR_NAS_5GMM_STATE: u16 = 0x80C; // NR NAS 5GMM State - According to MobileInsight
