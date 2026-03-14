@@ -1,4 +1,4 @@
-use crc::{self, CRC_16_IBM_SDLC};
+use crc::{self};
 
 fn sanitize_packet(buf: &mut Vec<u8>) {
     let mut index = 0;
@@ -18,8 +18,28 @@ fn sanitize_packet(buf: &mut Vec<u8>) {
     }
 }
 
-fn remove_sanitations_from_packet(buf: &mut Vec<u8>) {
+pub fn remove_sanitations_from_packet(buf: Vec<u8>) -> Vec<u8> {
+    let mut cleaned_buf: Vec<u8> = Vec::new();
+    let mut index = 0;
 
+    while index < buf.len() {
+        match(buf.get(index), buf.get(index+1)) {
+            (Some(&0x7d), Some(&0x5e)) => {
+                cleaned_buf.push(0x7e);
+                index += 2;
+            }
+            (Some(&0x7d), Some(&0x5d)) => {
+                cleaned_buf.push(0x7d);
+                index += 2;
+            }
+            (Some(&byte), _) => {
+                cleaned_buf.push(byte);
+                index += 1;
+            }
+            _ => break
+        }
+    }
+    cleaned_buf
 }
 
 fn generate_checksum(buf: &[u8]) -> [u8;2] {
