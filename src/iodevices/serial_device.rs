@@ -1,7 +1,6 @@
-use std::{io::{self, BufRead, BufReader, BufWriter, Write, Result}, time::Duration};
+use std::{io::{self, BufRead, BufReader, BufWriter, Write}, time::Duration};
 use serialport::SerialPort;
-use crate::ScatRSIO;
-use crate::util::{generate_packet, remove_sanitations_from_packet};
+use crate::{ScatRSError, ScatRSIO, Result, util::{generate_packet, remove_sanitations_from_packet}};
 
 pub struct DeviceIO {
     writer: BufWriter<Box<dyn SerialPort>>,
@@ -22,9 +21,22 @@ impl DeviceIO {
     }
 }
 
+impl From<std::io::Error> for ScatRSError {
+    fn from(err: std::io::Error) -> Self {
+        match err.kind() {
+            std::io::ErrorKind::InvalidData => ScatRSError::ParsingError,
+            std::io::ErrorKind::WriteZero
+            | std::io::ErrorKind::BrokenPipe => ScatRSError::WriteError(),
+            _ => ScatRSError::ReadError(),
+        }
+    }
+}
+
+
 impl ScatRSIO for DeviceIO {
-    fn write(&mut self, buf: Vec<u8>) -> Result<()>{
-        self.writer.write(&generate_packet(buf))?;
+    fn write(&mut self, buf: &[u8]) -> Result<()>{
+        let pkt = buf.to_vec();
+        self.writer.write(&generate_packet(pkt))?;
         self.writer.flush()?;
         Ok(())
     }

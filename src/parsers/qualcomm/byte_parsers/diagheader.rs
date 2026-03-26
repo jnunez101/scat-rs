@@ -1,15 +1,16 @@
 use core::fmt;
-use std::str::Utf8Error;
 
-use nom::{IResult, bytes::complete::take};
+use nom::{bytes::complete::take};
 
-use crate::device_interface::{ScatRSError, Result};
+use crate::{Result};
 
-impl From<Utf8Error> for ScatRSError{
-    fn from(err: Utf8Error) -> ScatRSError {
-        ScatRSError::ParsingUTF8Error(err)
-    }
+
+trait DiagStructure {
+    fn parse(self, pkt: &[u8]) -> Result<Box<dyn DiagStructure>>;
 }
+
+
+
 
 pub struct QcDiagVersion {
     pub compile_date: String,
@@ -20,7 +21,7 @@ pub struct QcDiagVersion {
 }
 
 impl QcDiagVersion {
-    fn from_bytes(
+    fn from_args(
         compile_date: &[u8],
         compile_time: &[u8],
         release_date: &[u8],
@@ -39,7 +40,7 @@ impl QcDiagVersion {
 
 impl fmt::Display for QcDiagVersion {
     fn fmt(&self, f: &mut fmt::Formatter) -> std::fmt::Result {
-        write!(f, "compile date: {} compile time: {} release_date: {} release time: {} chipset: {}", 
+        write!(f, "compile {}/{} release_date: {}/{} chipset: {}", 
             self.compile_date,
             self.compile_time,
             self.release_date,
@@ -49,14 +50,15 @@ impl fmt::Display for QcDiagVersion {
     }
 }
 
-pub fn parse_diag_version(input_buf: &[u8]) -> IResult<&[u8],QcDiagVersion> {
+impl DiagStructure for QcDiagVersion {
+    fn parse(self, pkt: &[u8]) -> Result<Box<dyn DiagStructure>> {
+        let (pkt, compile_date) = take::<usize, &[u8], nom::error::Error<_>>(11usize)(pkt)?;
+        let (pkt, compile_time) = take::<usize, &[u8], nom::error::Error<_>>(8usize)(pkt)?;
+        let (pkt, release_date)= take::<usize, &[u8], nom::error::Error<_>>(11usize)(pkt)?;
+        let (pkt, release_time) = take::<usize, &[u8], nom::error::Error<_>>(8usize)(pkt)?;
+        let (_, chipset) = take::<usize, &[u8], nom::error::Error<_>>(8usize)(pkt)?;
 
-    let (input_buf, compile_date) = take(11usize)(input_buf)?;
-    let (input_buf, compile_time) = take(8usize)(input_buf)?;
-    let (input_buf, release_date)= take(11usize)(input_buf)?;
-    let (input_buf, release_time) = take(8usize)(input_buf)?;
-    let (input_buf, chipset) = take(8usize)(input_buf)?;
-
-    Ok((input_buf, QcDiagVersion::from_bytes(compile_date, compile_time, release_date, release_time, chipset)?))
+        Ok(Box::new(QcDiagVersion::from_args(compile_date, compile_time, release_date, release_time, chipset)?))
+    }
 }
 
