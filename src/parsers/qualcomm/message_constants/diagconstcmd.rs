@@ -36,8 +36,8 @@ pub const DIAG_SUBSYS_ID_TDSCDMA: [u8;1] = [0x0D];
 
 // Log configuration operations
 // Origin: http://cgit.osmocom.org/osmo-qcdiag/tree/src/protocol/diag_log.c
-pub const LOG_CONFIG_DISABLE_OP: [u8;1] = [0];
-pub const LOG_CONFIG_RETRIEVE_ID_RANGES_OP: [u8;1] = [1];
-pub const LOG_CONFIG_RETRIEVE_VALID_MASK_OP: [u8;1] = [2];
-pub const LOG_CONFIG_SET_MASK_OP: [u8;1] = [3];
-pub const LOG_CONFIG_GET_LOGMASK_OP: [u8;1] = [4];
+pub const LOG_CONFIG_DISABLE_OP: u16 = 0;
+pub const LOG_CONFIG_RETRIEVE_ID_RANGES_OP: u16 = 1;
+pub const LOG_CONFIG_RETRIEVE_VALID_MASK_OP: u16 = 2;
+pub const LOG_CONFIG_SET_MASK_OP: u16 = 3;
+pub const LOG_CONFIG_GET_LOGMASK_OP: u16 = 4;

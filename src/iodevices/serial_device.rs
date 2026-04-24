@@ -44,6 +44,11 @@ impl ScatRSIO for DeviceIO {
         let mut buf = Vec::new();
         self.reader.read_until(0x7e, &mut buf)?;
 
+        //remove the crc
+        // todo add a flag to actually validate the crc
+        let _checksum_lower = buf.pop().unwrap();
+        let _checksum_higher = buf.pop().unwrap();
+
 
         Ok(remove_sanitations_from_packet(buf))
     }

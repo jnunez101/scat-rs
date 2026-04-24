@@ -16,6 +16,8 @@ use std::str::Utf8Error;
 
 use clap::Parser;
 
+use crate::qualcommparser::QualcommDiagParser;
+
 pub type Result<T> = std::result::Result<T, ScatRSError>;
 
 
@@ -60,4 +62,5 @@ fn main() {
         "qc" => Box::new(serial_device::DeviceIO::from_string(args.serial).unwrap()),
         _ => panic!("ohea")
     };
+    //let mut qualcomm_parser = QualcommDiagParser{ device: _io_device};
 }
